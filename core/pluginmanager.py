@@ -32,10 +32,13 @@ class PluginManager:
         return self.plugin_scanner.available_plugins()
     
     # Provide a dict for the platform accounts with the keys being platform ids and the ints being account ids
-    def publish_on_all(self, post: PostBase, platform_accounts: dict[str, int]):
+    def publish(self, post: PostBase, platform_accounts: dict[str, list[int]]):
+        pass
+
+    def publish_on_all(self, post: PostBase):
         for plugin in self.available_plugins:
             if issubclass(plugin.__class__, PlatformPluginBase):
-                plugin.publish_post(post)
+                plugin.publish_post(post, plugin.account_ids())
 
 
     

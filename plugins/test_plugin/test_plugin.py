@@ -16,6 +16,11 @@ class TestPlugin(PlatformPluginBase):
         self.test_database()
 
 
+    # TODO: Link with database test
+    def account_ids(self) -> tuple[int]:
+        return (0,)
+
+
     def publish_post(self, post: PostBase, account_ids: tuple[int]):
         print(f"""
             Post title: {post.title}
