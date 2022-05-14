@@ -3,7 +3,7 @@
 
 from typing import Any
 from core.coredataclasses import DatabaseFieldDefinition
-from core.coredatabase import CoreDatabase
+from core.coredatabase import CoreDatabase, USERS_TABLE
 
 def is_plugin_in_db(plugin_id: str) -> bool:
     print(f"Checking if platform with id '{plugin_id} is in database...")
@@ -37,6 +37,12 @@ def create_plugin_table(plugin_table_name: str, data_fields: list[DatabaseFieldD
     
 
 def delete_plugin_table(plugin_table_name: str):
+    if plugin_table_name == USERS_TABLE:
+        print("You are not allowed to delete the users table.")
+        return
+
+    print(f"Deleting database table {plugin_table_name} if it exists")
+
     query = f"DROP TABLE IF EXISTS {plugin_table_name};"
 
     cursor = CoreDatabase.instance()._connection.cursor()
@@ -59,6 +65,23 @@ def plugin_data(plugin_table_name: str) -> list[dict[Any, Any]]:
         return_data.append(row_as_dict)
 
     return return_data
+
+
+def plugin_data_row(plugin_table_name: str, row_id: int) -> dict[Any, Any]:
+    query = f"SELECT * FROM {plugin_table_name} WHERE id = ?;"
+    parameters = (row_id,)
+
+    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = cursor.execute(query, parameters)
+    query_result = cursor.fetchone()
+
+    if query_result:
+        column_names = [description[0] for description in cursor.description]
+        row_values = [value for value in query_result]
+        row_as_dict = dict(zip(column_names, row_values))
+        return row_as_dict
+    
+    return dict()
 
 
 def add_plugin_data(plugin_table_name: str, data: dict[str, Any]):

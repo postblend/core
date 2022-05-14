@@ -34,6 +34,10 @@ class PlatformAccountBase:
     id: int
     name: str
 
+@dataclass
+class BasicPlatformAccount(PlatformAccountBase):
+    username: str
+    password: str
 
 class PlatformPluginBase(PluginBase):
     def publish_post(self, post: PostBase, account_ids: tuple[int]):
@@ -43,6 +47,9 @@ class PlatformPluginBase(PluginBase):
         raise NotImplementedError
     
     def account_ids(self) -> tuple[int]:
+        raise NotImplementedError
+    
+    def account(self, account_id: int):
         raise NotImplementedError
     
     def add_account(self, account_details: dict) -> int:

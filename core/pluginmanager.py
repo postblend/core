@@ -26,16 +26,21 @@ class PluginManager:
         self._database = CoreDatabase.instance()
         self.plugin_scanner = PluginScanner()
 
-        self.available_plugins = self.load_available_plugins()
+        self.available_plugins = []
+
     
     def load_available_plugins(self):
         return self.plugin_scanner.available_plugins()
+
     
     # Provide a dict for the platform accounts with the keys being platform ids and the ints being account ids
-    def publish(self, post: PostBase, platform_accounts: dict[str, list[int]]):
-        pass
+    def publish_post(self, post: PostBase, platform_accounts: dict[str, list[int]]):
+        for plugin in self.available_plugins:
+            if issubclass(plugin.__class__, PlatformPluginBase) and plugin.id in platform_accounts:
+                plugin.publish_post(post, platform_accounts[plugin.id])
 
-    def publish_on_all(self, post: PostBase):
+
+    def publish_post_on_all(self, post: PostBase):
         for plugin in self.available_plugins:
             if issubclass(plugin.__class__, PlatformPluginBase):
                 plugin.publish_post(post, plugin.account_ids())
