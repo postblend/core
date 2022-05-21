@@ -4,7 +4,7 @@
 import core.definitions
 from core.coredatabase import CoreDatabase
 from core.pluginmanager import PluginManager
-from core.api.v1.post import PostBase
+from core.api.v1.post import PostBase, PostResult, PostResultStatus
 from core.api.v1.plugin import PlatformPluginBase, BasicPlatformAccount
 import core.api.v1.database as database
 
@@ -98,23 +98,29 @@ class TestPlugin(PlatformPluginBase):
         database.delete_plugin_data(self.plugin_table_name, account_id)
 
 
-    def publish_post(self, post: PostBase, account_ids: tuple):
+    def publish_post(self, post: PostBase, account_ids: tuple) -> dict[int, PostResult]:
+        posting_results_dict = {}
+
         for acc_id in account_ids:
             account_details = self.account(acc_id)
 
             if account_details:
-                print(f"""
+                printString = f"""
                     Post for account '{account_details.name}'
 
                     Post title: {post.title}
                     Post body: {post.body}
-                """)
+                """
+                print (printString)
+                posting_results_dict[acc_id] = PostResult(status = PostResultStatus.SUCCESS, post_data = printString)
             else:
                 print(f"Account with id '{acc_id}' does not exist for this plugin.")
+                posting_results_dict[acc_id] = PostResult(status = PostResultStatus.BAD_ACCOUNT, post_data = None)
+        
+        return posting_results_dict
                 
 
-
-
+print("Starting platform plugin test.")
 
 # Init singleton instances
 core_db = CoreDatabase.instance(core.definitions.DATABASE_PATH)
@@ -126,12 +132,12 @@ assert plugin_manager
 test_plugin_instance = TestPlugin()
 test_plugin_instance.init_database_data()
 
-plugin_manager.available_plugins.append(test_plugin_instance)
+plugin_manager._available_plugins.append(test_plugin_instance)
 
-test_post = PostBase
-test_post.title = "Test post"
-test_post.body = "Test post body!"
+test_post = PostBase(title = "Test post", body = ("Test post body!"))
 
-plugin_manager.publish_post(test_post, {"test_plugin": (0,1)})
+posting_results = plugin_manager.publish_post(post = test_post, platform_accounts = {"test_plugin": (0,1)})
+assert posting_results["test_plugin"][0].status == PostResultStatus.BAD_ACCOUNT
+assert posting_results["test_plugin"][1].status == PostResultStatus.SUCCESS
 
 test_plugin_instance.cleanup_database_data()

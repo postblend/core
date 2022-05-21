@@ -4,6 +4,8 @@
 import core.definitions
 from core.coredatabase import CoreDatabase
 
+print("Starting core database test.")
+
 core_db = CoreDatabase.instance(core.definitions.DATABASE_PATH)
 assert core_db
 

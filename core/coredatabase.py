@@ -31,8 +31,7 @@ class CoreDatabase:
             print("Creating new CoreDatabase instance.")
             CoreDatabase(str(db_path))
         elif db_path != None:
-            warnings.warn('''There is already a live database instance.
-            Ignoring new database path and returning original instance.''')
+            warnings.warn("There is already a live database instance. Ignoring new database path and returning original instance.")
 
         return CoreDatabase.__instance
 

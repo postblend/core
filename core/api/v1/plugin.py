@@ -4,7 +4,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from core.api.v1.post import PostBase
+from core.api.v1.post import PostBase, PostResult
 
 @dataclass
 class PluginVersion:
@@ -38,9 +38,10 @@ class PlatformAccountBase:
 class BasicPlatformAccount(PlatformAccountBase):
     username: str
     password: str
+    
 
 class PlatformPluginBase(PluginBase):
-    def publish_post(self, post: PostBase, account_ids: tuple[int]):
+    def publish_post(self, post: PostBase, account_ids: tuple[int]) -> dict[int, PostResult]:
         raise NotImplementedError
     
     def accounts(self) -> tuple[PlatformAccountBase]:

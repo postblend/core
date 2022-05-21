@@ -6,13 +6,14 @@ from core.coredataclasses import DatabaseFieldDefinition
 from core.coredatabase import CoreDatabase, USERS_TABLE
 
 def is_plugin_in_db(plugin_id: str) -> bool:
-    print(f"Checking if platform with id '{plugin_id} is in database...")
+    print(f"Checking if platform with id '{plugin_id}' is in database...")
         
     plugin_exists_query = f"SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = ?;"
     parameters = (plugin_id + "_data",)
 
     cursor = CoreDatabase.instance()._connection.cursor()
     return cursor.execute(plugin_exists_query, parameters).fetchone()[0] == 1
+
 
 # Initialises plugin table in database and provides plugin with database table name
 def create_plugin_table(plugin_table_name: str, data_fields: list[DatabaseFieldDefinition]):
