@@ -5,6 +5,16 @@ from typing import Any
 from core.coredataclasses import DatabaseFieldDefinition
 from core.coredatabase import CoreDatabase, USERS_TABLE
 
+
+"""
+Checks if there are any tables in the database created by the plugin with the provided id.
+Returns a simple true/false.
+
+Arguments:
+
+    plugin_id:              Integer representing the plugin's id.
+"""
+# TODO: Rewrite this, we need a table containing the ids of tables creating by plugins
 def is_plugin_in_db(plugin_id: str) -> bool:
     print(f"Checking if platform with id '{plugin_id}' is in database...")
         
@@ -15,7 +25,23 @@ def is_plugin_in_db(plugin_id: str) -> bool:
     return cursor.execute(plugin_exists_query, parameters).fetchone()[0] == 1
 
 
-# Initialises plugin table in database and provides plugin with database table name
+"""
+Creates a database table according to the details provided by the plugin.
+
+All tables will get an 'id' field by default. This is an auto-incrementing integer which functions as the
+table's primary key. Do not remove this field!
+
+Arguments:
+
+    plugin_table_name:      String representing the name of the table to be created
+
+    data_fields:            List of DatabaseFieldDefinitions (3-string tuples) which should detail the 
+                            fields of the database table.
+                      
+                            String1 represents the field name (e.g. "username")
+                            String2 represents the field type (e.g. TEXT)
+                            String3 represents the field constraints (e.g. NOT NULL PRIMARY KEY)
+"""
 def create_plugin_table(plugin_table_name: str, data_fields: list[DatabaseFieldDefinition]):
     if data_fields.count == 0 or is_plugin_in_db(plugin_table_name):
         return
@@ -37,6 +63,15 @@ def create_plugin_table(plugin_table_name: str, data_fields: list[DatabaseFieldD
     CoreDatabase.instance()._connection.commit()
     
 
+"""
+Delete the table from the database with the provided table name.
+It also ensures that no core table is deleted.
+
+Arguments:
+
+    plugin_table_name:      String representing the name of the table to be created
+"""
+# TODO: Ensure that this method can only delete tables created by the plugin itself
 def delete_plugin_table(plugin_table_name: str):
     if plugin_table_name == USERS_TABLE:
         print("You are not allowed to delete the users table.")
@@ -51,6 +86,20 @@ def delete_plugin_table(plugin_table_name: str):
     CoreDatabase.instance()._connection.commit()
 
 
+"""
+Retrieve the data stored in the table with the provided name.
+
+This data is returned in the form of a list of dicts. Each dict represents a row, and contains that row's
+values -- the dict key is the table field name, and the dict value is the row's value for that field. 
+
+E.g.: in a table with an id and username fields, the returned list would contain:
+
+[ {"id": 1, "username": "user1"}, {"id": 2, "username": "user2"}, {"id": 3, "username": "user3"} ]
+
+Arguments:
+
+    plugin_table_name:      String representing the name of the table the data will be fetched from
+"""
 def plugin_data(plugin_table_name: str) -> list[dict[Any, Any]]:
     query = f"SELECT * FROM {plugin_table_name};"
 
@@ -68,6 +117,18 @@ def plugin_data(plugin_table_name: str) -> list[dict[Any, Any]]:
     return return_data
 
 
+"""
+Similarly to plugin_data, this retrieves the data stored in the table with the provided name.
+This method, however, only returns the row with the provided row_id.
+
+The return type is the same (see above for details).
+
+Arguments:
+
+    plugin_table_name:    String representing the name of the table the data will be fetched from
+
+    row_id:               The ID of the specific row's data to be fetched
+"""
 def plugin_data_row(plugin_table_name: str, row_id: int) -> dict[Any, Any]:
     query = f"SELECT * FROM {plugin_table_name} WHERE id = ?;"
     parameters = (row_id,)
@@ -85,6 +146,28 @@ def plugin_data_row(plugin_table_name: str, row_id: int) -> dict[Any, Any]:
     return dict()
 
 
+"""
+Add a new row of data to the database table with the provided name.
+
+Arguments:
+
+    plugin_table_name:      String representing the name of the table the data will be inserted into
+
+    data:                   A dictionary containing the data to be inserted.
+
+                            The dictionary's keys should be the field names, and the values what is
+                            to be inserted. (e.g. {"username": "user1", "name": "First User"}).
+
+                            You will need to provide values according to the field constraints you
+                            have specified, i.e. NOT NULL fields will need to have values provided 
+                            or the process will fail.
+
+                            You do not need to worry about providing the fields in the correct 
+                            order.
+
+                            Do not insert a value for the "id" field manually.
+
+"""
 def add_plugin_data(plugin_table_name: str, data: dict[str, Any]):
     if len(data) == 0:
         return
@@ -111,6 +194,29 @@ def add_plugin_data(plugin_table_name: str, data: dict[str, Any]):
     return cursor.lastrowid
 
 
+"""
+Update a data row in the database table with the provided name.
+
+Arguments:
+
+    plugin_table_name:      String representing the name of the table the data will be inserted into
+
+    data_id:                Integer representing the specific data row
+
+    data:                   A dictionary containing the data to be inserted.
+
+                            The dictionary's keys should be the field names, and the values what is
+                            to be inserted. (e.g. {"username": "user1", "name": "First User"}).
+
+                            You will need to provide values according to the field constraints you
+                            have specified, i.e. NOT NULL fields will need to have values provided 
+                            or the process will fail.
+
+                            You do not need to worry about providing the fields in the correct 
+                            order.
+
+                            Do not insert a value for the "id" field manually.
+"""
 def update_plugin_data(plugin_table_name: str, data_id: int, data: dict[str, Any]):
     if len(data) == 0:
         return
@@ -129,6 +235,15 @@ def update_plugin_data(plugin_table_name: str, data_id: int, data: dict[str, Any
     CoreDatabase.instance()._connection.commit()
 
 
+"""
+Delete a data row in the database table with the provided name.
+
+Arguments:
+
+    plugin_table_name:      String representing the name of the table the data will be inserted into
+
+    data_id:                Integer representing the specific data row
+"""
 def delete_plugin_data(plugin_table_name: str, data_id: int):
     delete_query = f"DELETE FROM {plugin_table_name} WHERE id = ?"
     parameters = (data_id,)
