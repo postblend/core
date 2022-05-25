@@ -145,6 +145,44 @@ def plugin_data_row(plugin_table_name: str, row_id: int) -> dict[Any, Any]:
     
     return dict()
 
+"""
+Similarly to plugin_data_row, this retrieves the data stored in the table with the provided name.
+This method, however, returns all the rows in which the field matches the value provided.
+
+The return type is the same (see above for details).
+
+Arguments:
+
+    plugin_table_name:    String representing the name of the table the data will be fetched from
+
+    field_name:           Name of the field we want to search in
+
+    field_value:                The value we want to match
+
+Returns:
+
+A list of dictionaries containing the data from the matched rows.
+
+TODO
+* Add version that returns records where multiple fields match multiple values
+"""
+def plugin_data_values(plugin_table_name: str, field_name: str, field_value: str) -> list[dict[Any, Any]]:
+    query = f"SELECT * FROM {plugin_table_name} WHERE {field_name} = ?;"
+    parameters = (field_value,)
+
+    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = cursor.execute(query, parameters)
+    query_results = cursor.fetchall()
+    return_data = []
+
+    for row in query_results:
+        column_names = [description[0] for description in cursor.description]
+        row_values = [value for value in row]
+        row_as_dict = dict(zip(column_names, row_values))
+        return_data.append(row_as_dict)
+
+    return return_data
+
 
 """
 Add a new row of data to the database table with the provided name.
