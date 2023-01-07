@@ -7,6 +7,9 @@ from datetime import datetime
 from core.api.v1.post import PostBase, PostResult
 from core.coredataclasses import AccountIdTuple, PluginId
 
+"""
+A simple data class that can be used to set plugin versions in a X.Y.Z format.
+"""
 @dataclass
 class PluginVersion:
     major: int
@@ -14,7 +17,12 @@ class PluginVersion:
     micro: int
 
 
-# Plugins should subclass this to implement plugins.
+"""
+Base plugin class. 
+
+Provides the basis for any type of PostBlend plugin. 
+Do not subclass this if you are creating a platform plugin -- use PlatformPluginBase instead.
+"""
 class PluginBase:
     def __init__(self):
         self.id: PluginId
@@ -30,17 +38,31 @@ class PluginBase:
         return f"{self.version.major}.{self.version.minor}.{self.version.micro}"
 
 
+"""
+Basic data class to base a platform account off of.
+
+The id field is necessary for database identification; the name can be whatever you want.
+"""
 @dataclass
 class PlatformAccountBase:
     id: int
     name: str
 
+
+"""
+Extends the basic PlatformAccountBase by adding a standard username and password.
+"""
 @dataclass
 class BasicPlatformAccount(PlatformAccountBase):
     username: str
     password: str
     
 
+"""
+The base for a platform plugin. 
+
+Each of the methods defined is used by Core to allow for posting.
+"""
 class PlatformPluginBase(PluginBase):
     def publish_post(self, post: PostBase, account_ids: AccountIdTuple) -> dict[int, PostResult]:
         raise NotImplementedError
