@@ -1,2 +1,0 @@
-import tests.coredatabase_tests
-import tests.platformplugins_tests
