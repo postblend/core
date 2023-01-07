@@ -6,7 +6,7 @@ import enum
 
 DatabaseFieldDefinition = tuple[str, str, str] # Tuples with data info (field name, data type, constraints)
 AccountId = int
-AccountIdList = list[int]
+AccountIdTuple = tuple[int]
 PluginId = str
 
 @dataclass

@@ -3,7 +3,7 @@
 
 from core.api.v1.plugin import PlatformPluginBase
 from core.coredatabase import CoreDatabase
-from core.coredataclasses import AccountId, AccountIdList, PluginId
+from core.coredataclasses import AccountId, AccountIdTuple, PluginId
 from core.plugintools import PluginScanner
 from core.api.v1.post import PostBase, PostResult
 
@@ -42,7 +42,7 @@ class PluginManager:
         return tuple([plugin.id for plugin in self.available_plugins()])
 
     
-    def publish_post(self, post: PostBase, platform_accounts: dict[PluginId, AccountIdList]) -> dict[PluginId, dict[AccountId, PostResult]]:
+    def publish_post(self, post: PostBase, platform_accounts: dict[PluginId, AccountIdTuple]) -> dict[PluginId, dict[AccountId, PostResult]]:
         posting_result_dict = {}
 
         for plugin in self.available_plugins():
@@ -53,7 +53,7 @@ class PluginManager:
         return posting_result_dict
 
 
-    def publish_post_on_all(self, post: PostBase):
+    def publish_post_on_all(self, post: PostBase) -> dict[PluginId, dict[AccountId, PostResult]]:
         plugin_ids = self.available_plugin_ids()
         plugin_accounts = [plugin.accounts() for plugin in self.available_plugins()]
         return self.publish_post(post, dict(zip(plugin_ids, plugin_accounts)))

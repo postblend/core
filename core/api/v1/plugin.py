@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from core.api.v1.post import PostBase, PostResult
+from core.coredataclasses import AccountIdTuple, PluginId
 
 @dataclass
 class PluginVersion:
@@ -16,7 +17,7 @@ class PluginVersion:
 # Plugins should subclass this to implement plugins.
 class PluginBase:
     def __init__(self):
-        self.id: str
+        self.id: PluginId
         self.name: str
         self.description: str
         self.author: str
@@ -41,7 +42,7 @@ class BasicPlatformAccount(PlatformAccountBase):
     
 
 class PlatformPluginBase(PluginBase):
-    def publish_post(self, post: PostBase, account_ids: tuple[int]) -> dict[int, PostResult]:
+    def publish_post(self, post: PostBase, account_ids: AccountIdTuple) -> dict[int, PostResult]:
         raise NotImplementedError
     
     def accounts(self) -> tuple[PlatformAccountBase]:
