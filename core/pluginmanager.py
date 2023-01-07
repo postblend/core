@@ -24,13 +24,12 @@ class PluginManager:
             PluginManager.__instance = self
 
         self._database = CoreDatabase.instance()
-        self.plugin_scanner = PluginScanner()
-
         self._available_plugins = []
 
     
     def load_available_plugins(self) -> tuple:
-        self._available_plugins = self.plugin_scanner.available_plugins()
+        plugin_scanner = PluginScanner()
+        self._available_plugins = plugin_scanner.available_plugins()
         return self._available_plugins
 
 
