@@ -3,6 +3,7 @@
 
 from core.api.v1.plugin import PlatformPluginBase
 from core.coredatabase import CoreDatabase
+from core.coredataclasses import AccountId, AccountIdList, PluginId
 from core.plugintools import PluginScanner
 from core.api.v1.post import PostBase, PostResult
 
@@ -41,8 +42,7 @@ class PluginManager:
         return tuple([plugin.id for plugin in self.available_plugins()])
 
     
-    # Provide a dict for the platform accounts with the keys being platform ids and the ints being account ids
-    def publish_post(self, post: PostBase, platform_accounts: dict[str, list[int]]) -> dict[str, dict[int, PostResult]]:
+    def publish_post(self, post: PostBase, platform_accounts: dict[PluginId, AccountIdList]) -> dict[PluginId, dict[AccountId, PostResult]]:
         posting_result_dict = {}
 
         for plugin in self.available_plugins():

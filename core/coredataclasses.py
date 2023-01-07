@@ -5,10 +5,13 @@ from dataclasses import dataclass
 import enum
 
 DatabaseFieldDefinition = tuple[str, str, str] # Tuples with data info (field name, data type, constraints)
+AccountId = int
+AccountIdList = list[int]
+PluginId = str
 
 @dataclass
 class UserAccountData:
-    id: int
+    id: AccountId
     account_name: str
     username: str
     key: str
