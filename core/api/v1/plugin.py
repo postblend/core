@@ -70,8 +70,8 @@ class PlatformPluginBase(PluginBase):
     def accounts(self) -> tuple[PlatformAccountBase]:
         raise NotImplementedError
     
-    def account_ids(self) -> tuple[int]:
-        raise NotImplementedError
+    def account_ids(self) -> AccountIdTuple:
+        return [plugin.id for plugin in self.accounts()]
     
     def account(self, account_id: int):
         raise NotImplementedError

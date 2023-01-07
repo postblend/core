@@ -66,12 +66,6 @@ class TestPlugin(PlatformPluginBase):
         return tuple(accounts_tuple)
 
 
-    def account_ids(self) -> tuple:
-        accounts = self.accounts()
-        acc_ids = [account.id for account in accounts]
-        return tuple(acc_ids)
-
-
     def account(self, account_id: int) -> BasicPlatformAccount:
         account = database.plugin_data_row(self.plugin_table_name, account_id)
         
