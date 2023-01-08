@@ -4,8 +4,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from core.api.v1.account import AccountIdTuple
-from core.api.v1.post import PostBase, PostResult
+from core.plugins.api.account import AccountIdTuple
+from core.plugins.api.post import PostBase, PostResult
 
 PluginId = str
 

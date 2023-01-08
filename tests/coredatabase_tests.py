@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 import core.definitions
-from core.databasecontroller import DatabaseController
+from core.database.databasecontroller import DatabaseController
 
 print("Starting core database test.")
 

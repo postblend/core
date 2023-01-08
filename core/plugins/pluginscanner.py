@@ -6,7 +6,7 @@ import inspect
 import os
 import pkgutil
 
-from core.api.v1.plugin import PlatformPluginBase, PluginBase
+from core.plugins.api.plugin import PlatformPluginBase, PluginBase
 from core.definitions import PLUGINS_PKG_DIR
 
 class PluginScanner:

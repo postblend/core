@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: 2022 Claudio Cambra <claudio.cambra@gmail.com>
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
-from core.databasecontroller import DatabaseController
-from core.plugintools import PluginScanner
+from core.database.databasecontroller import DatabaseController
+from core.plugins.pluginscanner import PluginScanner
 
-from core.api.v1.account import AccountId, AccountIdTuple
-from core.api.v1.plugin import PlatformPluginBase, PluginId
-from core.api.v1.post import PostBase, PostResult
+from core.plugins.api.account import AccountId, AccountIdTuple
+from core.plugins.api.plugin import PlatformPluginBase, PluginId
+from core.plugins.api.post import PostBase, PostResult
 
 class PluginManager:
     __instance = None

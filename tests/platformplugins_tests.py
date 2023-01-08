@@ -2,11 +2,11 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 import core.definitions
-from core.databasecontroller import DatabaseController
-from core.pluginmanager import PluginManager
-from core.api.v1.post import PostBase, PostResult, PostResultStatus
-from core.api.v1.plugin import PlatformPluginBase, BasicPlatformAccount
-import core.api.v1.database as database
+from core.database.databasecontroller import DatabaseController
+from core.plugins.pluginmanager import PluginManager
+from core.plugins.api.post import PostBase, PostResult, PostResultStatus
+from core.plugins.api.plugin import PlatformPluginBase, BasicPlatformAccount
+import core.plugins.api.database as database
 
 
 class TestPlugin(PlatformPluginBase):
