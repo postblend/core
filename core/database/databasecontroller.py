@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from os import urandom
 from os.path import exists
 
-from core.plugins.api.account import AccountId
+from core.plugins.api.users import UserId
 
 SALT_LENGTH = 32
 HASH_ITERATIONS = 100000
@@ -24,7 +24,7 @@ SALT_COLUMN = "salt"
 
 @dataclass
 class UserAccountData:
-    id: AccountId
+    id: UserId
     account_name: str
     username: str
     key: str
@@ -63,25 +63,26 @@ class DatabaseController:
 
         if need_initial_setup:
             print(f"File at {db_path} does not exist. Creating database with provided path.")
-
-            print("Creating user accounts table...")
-            query = f'''CREATE TABLE IF NOT EXISTS {USERS_TABLE}
-                (
-                    {ID_COLUMN}             INTEGER     PRIMARY KEY     AUTOINCREMENT,
-                    {ACCOUNT_NAME_COLUMN}   TEXT,
-                    {USERNAME_COLUMN}       TEXT        UNIQUE          NOT NULL,
-                    {KEY_COLUMN}            TEXT,
-                    {SALT_COLUMN}           TEXT
-                );
-                '''
-            cursor = self._connection.cursor()
-            cursor.execute(query)
-            self._connection.commit()
-
+            self.__create_users_table()
+            
     def __del__(self):
         if self._connection:
             self._connection.close()
 
+    def __create_users_table(self):
+        print("Creating user accounts table...")
+        query = f'''CREATE TABLE IF NOT EXISTS {USERS_TABLE}
+            (
+                {ID_COLUMN}             INTEGER     PRIMARY KEY     AUTOINCREMENT,
+                {ACCOUNT_NAME_COLUMN}   TEXT,
+                {USERNAME_COLUMN}       TEXT        UNIQUE          NOT NULL,
+                {KEY_COLUMN}            TEXT,
+                {SALT_COLUMN}           TEXT
+            );
+            '''
+        cursor = self._connection.cursor()
+        cursor.execute(query)
+        self._connection.commit()
 
     ########## UTILITY METHODS ##########
 
