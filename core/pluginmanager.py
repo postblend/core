@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2022 Claudio Cambra <claudio.cambra@gmail.com>
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
-from core.coredatabase import CoreDatabase
+from core.databasecontroller import DatabaseController
 from core.plugintools import PluginScanner
 
 from core.api.v1.account import AccountId, AccountIdTuple
@@ -25,7 +25,7 @@ class PluginManager:
         else:
             PluginManager.__instance = self
 
-        self._database = CoreDatabase.instance()
+        self._database = DatabaseController.instance()
         self._available_plugins = []
 
     

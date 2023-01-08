@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 from typing import Any
-from core.coredatabase import CoreDatabase, USERS_TABLE
+from core.databasecontroller import DatabaseController, USERS_TABLE
 
 DatabaseFieldDefinition = tuple[str, str, str]
 
@@ -21,7 +21,7 @@ def is_plugin_in_db(plugin_id: str) -> bool:
     plugin_exists_query = f"SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = ?;"
     parameters = (plugin_id + "_data",)
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     return cursor.execute(plugin_exists_query, parameters).fetchone()[0] == 1
 
 
@@ -58,9 +58,9 @@ def create_plugin_table(plugin_table_name: str, data_fields: list[DatabaseFieldD
         create_query += f"{field_name} {field_type} {field_constraints},"
     create_query = create_query[:-1] + ");" # Chop off last comma and finish query
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor.execute(create_query)
-    CoreDatabase.instance()._connection.commit()
+    DatabaseController.instance()._connection.commit()
     
 
 """
@@ -81,9 +81,9 @@ def delete_plugin_table(plugin_table_name: str):
 
     query = f"DROP TABLE IF EXISTS {plugin_table_name};"
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor = cursor.execute(query)
-    CoreDatabase.instance()._connection.commit()
+    DatabaseController.instance()._connection.commit()
 
 
 """
@@ -103,7 +103,7 @@ Arguments:
 def plugin_data(plugin_table_name: str) -> list[dict[Any, Any]]:
     query = f"SELECT * FROM {plugin_table_name};"
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor = cursor.execute(query)
     query_results = cursor.fetchall()
     return_data = []
@@ -133,7 +133,7 @@ def plugin_data_row(plugin_table_name: str, row_id: int) -> dict[Any, Any]:
     query = f"SELECT * FROM {plugin_table_name} WHERE id = ?;"
     parameters = (row_id,)
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor = cursor.execute(query, parameters)
     query_result = cursor.fetchone()
 
@@ -170,7 +170,7 @@ def plugin_data_values(plugin_table_name: str, field_name: str, field_value: str
     query = f"SELECT * FROM {plugin_table_name} WHERE {field_name} = ?;"
     parameters = (field_value,)
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor = cursor.execute(query, parameters)
     query_results = cursor.fetchall()
     return_data = []
@@ -210,7 +210,7 @@ def add_plugin_data(plugin_table_name: str, data: dict[str, Any]):
     if len(data) == 0:
         return
 
-    field_names = CoreDatabase.instance().table_fields(plugin_table_name)
+    field_names = DatabaseController.instance().table_fields(plugin_table_name)
     values_to_insert = []
     insert_query = f"INSERT INTO {plugin_table_name} VALUES ("
 
@@ -225,9 +225,9 @@ def add_plugin_data(plugin_table_name: str, data: dict[str, Any]):
         insert_query += "?, "
     insert_query = insert_query[:-2] + ");" # Chop off last comma
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor.execute(insert_query, values_to_insert)
-    CoreDatabase.instance()._connection.commit()
+    DatabaseController.instance()._connection.commit()
 
     return cursor.lastrowid
 
@@ -268,9 +268,9 @@ def update_plugin_data(plugin_table_name: str, data_id: int, data: dict[str, Any
     update_query = update_query[:-2] + update_query_end
     parameters = (*data.values(), data_id)
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor.execute(update_query, parameters)
-    CoreDatabase.instance()._connection.commit()
+    DatabaseController.instance()._connection.commit()
 
 
 """
@@ -286,6 +286,6 @@ def delete_plugin_data(plugin_table_name: str, data_id: int):
     delete_query = f"DELETE FROM {plugin_table_name} WHERE id = ?"
     parameters = (data_id,)
 
-    cursor = CoreDatabase.instance()._connection.cursor()
+    cursor = DatabaseController.instance()._connection.cursor()
     cursor.execute(delete_query, parameters)
-    CoreDatabase.instance()._connection.commit()
+    DatabaseController.instance()._connection.commit()

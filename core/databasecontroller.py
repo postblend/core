@@ -39,24 +39,24 @@ class UserCredCheckResult(enum.Enum):
 # Stores sensitive user data pertaining to platform accounts.
 # Each platform must have a unique plugin id to be identified in the database.
 
-class CoreDatabase:
+class DatabaseController:
     __instance = None
 
     @staticmethod
     def instance(db_path: str = None):
-        if CoreDatabase.__instance == None:
-            print("Creating new CoreDatabase instance.")
-            CoreDatabase(str(db_path))
+        if DatabaseController.__instance == None:
+            print("Creating new DatabaseController instance.")
+            DatabaseController(str(db_path))
         elif db_path != None:
             warnings.warn("There is already a live database instance. Ignoring new database path and returning original instance.")
 
-        return CoreDatabase.__instance
+        return DatabaseController.__instance
 
     def __init__(self, db_path: str):
-        if CoreDatabase.__instance != None:
+        if DatabaseController.__instance != None:
             raise Exception("This class is a singleton!")
         else:
-            CoreDatabase.__instance = self
+            DatabaseController.__instance = self
 
         need_initial_setup = not exists(db_path)
         self._connection = sqlite3.connect(db_path)

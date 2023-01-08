@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 import core.definitions
-from core.coredatabase import CoreDatabase
+from core.databasecontroller import DatabaseController
 from core.pluginmanager import PluginManager
 from core.api.v1.post import PostBase, PostResult, PostResultStatus
 from core.api.v1.plugin import PlatformPluginBase, BasicPlatformAccount
@@ -117,7 +117,7 @@ class TestPlugin(PlatformPluginBase):
 print("Starting platform plugin test.")
 
 # Init singleton instances
-core_db = CoreDatabase.instance(core.definitions.DATABASE_PATH)
+core_db = DatabaseController.instance(core.definitions.DATABASE_PATH)
 assert core_db
 
 plugin_manager = PluginManager.instance()
