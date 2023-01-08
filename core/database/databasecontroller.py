@@ -16,11 +16,16 @@ SALT_LENGTH = 32
 HASH_ITERATIONS = 100000
 
 USERS_TABLE = "users"
+
 ID_COLUMN = "id"
 ACCOUNT_NAME_COLUMN = "name"
 USERNAME_COLUMN = "username"
 KEY_COLUMN = "key"
 SALT_COLUMN = "salt"
+
+PLUGIN_TABLES_TABLE = "plugin_tables"
+PLUGIN_ID = "plugin_id"
+PLUGIN_TABLE_NAME = "plugin_table_name"
 
 @dataclass
 class UserAccountData:
@@ -64,6 +69,7 @@ class DatabaseController:
         if need_initial_setup:
             print(f"File at {db_path} does not exist. Creating database with provided path.")
             self.__create_users_table()
+            self.__create_plugins_tables_table()
             
     def __del__(self):
         if self._connection:
@@ -78,6 +84,19 @@ class DatabaseController:
                 {USERNAME_COLUMN}       TEXT        UNIQUE          NOT NULL,
                 {KEY_COLUMN}            TEXT,
                 {SALT_COLUMN}           TEXT
+            );
+            '''
+        cursor = self._connection.cursor()
+        cursor.execute(query)
+        self._connection.commit()
+    
+    def __create_plugins_tables_table(self):
+        print("Creating table for plugin tables...")
+        query = f'''CREATE TABLE IF NOT EXISTS {PLUGIN_TABLES_TABLE}
+            (
+                {ID_COLUMN}             INTEGER     PRIMARY KEY     AUTOINCREMENT,
+                {PLUGIN_ID}             TEXT                        NOT NULL,
+                {PLUGIN_TABLE_NAME}     TEXT        UNIQUE          NOT NULL
             );
             '''
         cursor = self._connection.cursor()
