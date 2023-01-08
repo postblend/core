@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 from typing import Any
-from core.databasecontroller import DatabaseController, USERS_TABLE
+from core.database.databasecontroller import DatabaseController, USERS_TABLE
 
 DatabaseFieldDefinition = tuple[str, str, str]
 
