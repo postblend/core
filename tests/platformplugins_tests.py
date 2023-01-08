@@ -4,9 +4,9 @@
 import core.definitions
 from core.database.databasecontroller import DatabaseController
 from core.plugins.pluginmanager import PluginManager
-from core.plugins.api.post import PostBase, PostResult, PostResultStatus
-from core.plugins.api.plugin import PlatformPluginBase, BasicPlatformAccount
-import core.plugins.api.database as database
+from lib.post import PostBase, PostResult, PostResultStatus
+from lib.plugin import PlatformPluginBase, BasicPlatformAccount
+import lib.database as database
 
 
 class TestPlugin(PlatformPluginBase):

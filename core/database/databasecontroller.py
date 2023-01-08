@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from os import urandom
 from os.path import exists
 
-from core.plugins.api.users import UserId
+from lib.users import UserId
 
 SALT_LENGTH = 32
 HASH_ITERATIONS = 100000

@@ -4,9 +4,9 @@
 from core.database.databasecontroller import DatabaseController
 from core.plugins.pluginscanner import PluginScanner
 
-from core.plugins.api.account import AccountId, AccountIdTuple
-from core.plugins.api.plugin import PlatformPluginBase, PluginId
-from core.plugins.api.post import PostBase, PostResult
+from lib.account import AccountId, AccountIdTuple
+from lib.plugin import PlatformPluginBase, PluginId
+from lib.post import PostBase, PostResult
 
 class PluginManager:
     __instance = None
