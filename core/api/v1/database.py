@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
 from typing import Any
-from core.coredataclasses import DatabaseFieldDefinition
 from core.coredatabase import CoreDatabase, USERS_TABLE
 
+DatabaseFieldDefinition = tuple[str, str, str]
 
 """
 Checks if there are any tables in the database created by the plugin with the provided id.

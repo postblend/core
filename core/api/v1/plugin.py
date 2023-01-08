@@ -4,8 +4,10 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+from core.api.v1.account import AccountIdTuple
 from core.api.v1.post import PostBase, PostResult
-from core.coredataclasses import AccountIdTuple, PluginId
+
+PluginId = str
 
 """
 A simple data class that can be used to set plugin versions in a X.Y.Z format.

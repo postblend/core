@@ -1,13 +1,16 @@
-# SPDX-FileCopyrightText: 2022 Claudio Cambra <claudio.cambra@gmail.com>
+# SPDX-FileCopyrightText: 2022 Claudio Cambra <developer@claudiocambra.com>
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
+import enum
 import hashlib
 import sqlite3
 import warnings
+
+from dataclasses import dataclass
 from os import urandom
 from os.path import exists
 
-from core.coredataclasses import UserAccountData, UserCredCheckResult
+from core.api.v1.account import AccountId
 
 SALT_LENGTH = 32
 HASH_ITERATIONS = 100000
@@ -18,6 +21,20 @@ ACCOUNT_NAME_COLUMN = "name"
 USERNAME_COLUMN = "username"
 KEY_COLUMN = "key"
 SALT_COLUMN = "salt"
+
+@dataclass
+class UserAccountData:
+    id: AccountId
+    account_name: str
+    username: str
+    key: str
+    salt: str
+
+@dataclass
+class UserCredCheckResult(enum.Enum):
+    UNKNOWN_USERNAME = 0
+    INCORRECT_PASSWORD = 1
+    CORRECT = 2
 
 # Stores sensitive user data pertaining to platform accounts.
 # Each platform must have a unique plugin id to be identified in the database.

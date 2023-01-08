@@ -1,10 +1,11 @@
 # SPDX-FileCopyrightText: 2022 Claudio Cambra <claudio.cambra@gmail.com>
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
-from core.api.v1.plugin import PlatformPluginBase
 from core.coredatabase import CoreDatabase
-from core.coredataclasses import AccountId, AccountIdTuple, PluginId
 from core.plugintools import PluginScanner
+
+from core.api.v1.account import AccountId, AccountIdTuple
+from core.api.v1.plugin import PlatformPluginBase, PluginId
 from core.api.v1.post import PostBase, PostResult
 
 class PluginManager:
